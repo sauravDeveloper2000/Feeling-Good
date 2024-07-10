@@ -24,7 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.feelinggood.R
-import com.example.feelinggood.core.VerticalSpace
+import com.example.feelinggood.core.components.VerticalSpace
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

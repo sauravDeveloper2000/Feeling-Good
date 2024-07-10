@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
-import com.example.feelinggood.auth.ui.login_screen.LoginScreen
+import com.example.feelinggood.auth.ui.registration_screen.RegistrationScreen
 import com.example.feelinggood.ui.theme.FeelingGoodTheme
 
 class MainActivity : ComponentActivity() {
@@ -13,7 +13,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             FeelingGoodTheme {
-                LoginScreen(
+//                LoginScreen(
+//                    modifier = Modifier.fillMaxSize()
+//                )
+                RegistrationScreen(
                     modifier = Modifier.fillMaxSize()
                 )
             }

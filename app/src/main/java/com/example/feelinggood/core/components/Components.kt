@@ -1,4 +1,4 @@
-package com.example.feelinggood.core
+package com.example.feelinggood.core.components
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
