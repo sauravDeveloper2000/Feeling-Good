@@ -25,7 +25,10 @@ import com.example.feelinggood.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegistrationScreen(modifier: Modifier = Modifier) {
+fun RegistrationScreen(
+    modifier: Modifier = Modifier,
+    navigateToLoginScreen: () -> Unit
+) {
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -107,7 +110,7 @@ fun RegistrationScreen(modifier: Modifier = Modifier) {
                      * If user already have an account, then navigate him to Login Screen.
                      */
                     Text(text = "Already have an account!!")
-                    TextButton(onClick = { /*TODO*/ }) {
+                    TextButton(onClick = navigateToLoginScreen) {
                         Text(text = "Login")
                     }
                 }

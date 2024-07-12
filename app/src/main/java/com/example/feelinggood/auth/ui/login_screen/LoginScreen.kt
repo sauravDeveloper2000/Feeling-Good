@@ -29,7 +29,8 @@ import com.example.feelinggood.core.components.VerticalSpace
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navigateToRegistrationScreen: () -> Unit
 ) {
     Scaffold(
         modifier = modifier,
@@ -88,11 +89,18 @@ fun LoginScreen(
                     Button(onClick = { /*TODO*/ }) {
                         Text(text = "Login")
                     }
+                    /**
+                     * If user don't have an account, then navigate
+                     * him to registration screen. Where user can
+                     * create account.
+                     */
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(text = "Don't have an account!!")
-                        TextButton(onClick = { /*TODO*/ }) {
+                        TextButton(
+                            onClick = navigateToRegistrationScreen
+                        ) {
                             Text(text = "Create")
                         }
                     }
