@@ -24,12 +24,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.feelinggood.R
+import com.example.feelinggood.auth.user_actions.EventsOnLoginScreen
 import com.example.feelinggood.core.components.VerticalSpace
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
+    loginScreenViewModel: LoginScreenViewModel,
     navigateToRegistrationScreen: () -> Unit
 ) {
     Scaffold(
@@ -56,27 +58,35 @@ fun LoginScreen(
                 ) {
                     Text(text = "Login")
                     /**
-                     * Password Field
+                     * Email-ID Field
                      */
                     OutlinedTextField(
                         modifier = Modifier.fillMaxWidth(),
                         label = {
                             Text(text = "Enter your Email-Id")
                         },
-                        value = "",
-                        onValueChange = {}
+                        value = loginScreenViewModel.emailId,
+                        onValueChange = { emailId ->
+                            loginScreenViewModel.onEvent(EventsOnLoginScreen.OnEmailIdClick(emailId = emailId))
+                        }
                     )
                     VerticalSpace(desiredSpace = 10)
                     /**
-                     * Email-ID Field
+                     * Password Field
                      */
                     OutlinedTextField(
                         modifier = Modifier.fillMaxWidth(),
                         label = {
                             Text(text = "Enter your Password")
                         },
-                        value = "",
-                        onValueChange = {},
+                        value = loginScreenViewModel.password,
+                        onValueChange = { password ->
+                            loginScreenViewModel.onEvent(
+                                EventsOnLoginScreen.OnPasswordClick(
+                                    password = password
+                                )
+                            )
+                        },
                         trailingIcon = {
                             IconButton(onClick = { /*TODO*/ }) {
                                 Icon(

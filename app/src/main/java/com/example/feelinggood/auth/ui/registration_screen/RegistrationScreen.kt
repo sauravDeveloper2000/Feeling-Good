@@ -22,11 +22,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.feelinggood.R
+import com.example.feelinggood.auth.user_actions.EventsOnRegistrationScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegistrationScreen(
     modifier: Modifier = Modifier,
+    registrationScreenViewModel: RegistrationScreenViewModel,
     navigateToLoginScreen: () -> Unit
 ) {
     Scaffold(
@@ -61,8 +63,14 @@ fun RegistrationScreen(
                  */
                 OutlinedTextField(
                     modifier = Modifier.fillMaxWidth(),
-                    value = "",
-                    onValueChange = {},
+                    value = registrationScreenViewModel.name,
+                    onValueChange = { name ->
+                        registrationScreenViewModel.onEvent(
+                            EventsOnRegistrationScreen.OnNameFieldClick(
+                                name = name
+                            )
+                        )
+                    },
                     label = {
                         Text(text = "Name")
                     }
@@ -72,8 +80,14 @@ fun RegistrationScreen(
                  */
                 OutlinedTextField(
                     modifier = Modifier.fillMaxWidth(),
-                    value = "",
-                    onValueChange = {},
+                    value = registrationScreenViewModel.emailId,
+                    onValueChange = { emailId ->
+                        registrationScreenViewModel.onEvent(
+                            EventsOnRegistrationScreen.OnEmailIdClick(
+                                emailId = emailId
+                            )
+                        )
+                    },
                     label = {
                         Text(text = "Email-ID")
                     }
@@ -83,8 +97,14 @@ fun RegistrationScreen(
                  */
                 OutlinedTextField(
                     modifier = Modifier.fillMaxWidth(),
-                    value = "",
-                    onValueChange = {},
+                    value = registrationScreenViewModel.newPassword,
+                    onValueChange = { newPassword ->
+                        registrationScreenViewModel.onEvent(
+                            EventsOnRegistrationScreen.OnNewPasswordClick(
+                                newPassword = newPassword
+                            )
+                        )
+                    },
                     label = {
                         Text(text = "New Password")
                     }
@@ -94,8 +114,14 @@ fun RegistrationScreen(
                  */
                 OutlinedTextField(
                     modifier = Modifier.fillMaxWidth(),
-                    value = "",
-                    onValueChange = {},
+                    value = registrationScreenViewModel.confirmNewPassword,
+                    onValueChange = { confirmNewPassword ->
+                        registrationScreenViewModel.onEvent(
+                            EventsOnRegistrationScreen.OnConfirmPasswordClick(
+                                confirmPassword = confirmNewPassword
+                            )
+                        )
+                    },
                     label = {
                         Text(text = "Confirm New Password")
                     }

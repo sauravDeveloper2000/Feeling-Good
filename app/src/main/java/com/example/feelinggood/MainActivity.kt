@@ -5,6 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import com.example.feelinggood.auth.StartDestinationViewModel
+import com.example.feelinggood.auth.ui.login_screen.LoginScreenViewModel
+import com.example.feelinggood.auth.ui.registration_screen.RegistrationScreenViewModel
 import com.example.feelinggood.core.navigation.AppNavigation
 import com.example.feelinggood.core.navigation.Destination
 import com.example.feelinggood.ui.theme.FeelingGoodTheme
@@ -16,6 +18,8 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val startDestinationViewModel: StartDestinationViewModel by viewModels()
+    private val registrationScreenViewModel: RegistrationScreenViewModel by viewModels()
+    private val loginScreenViewModel: LoginScreenViewModel by viewModels()
     private lateinit var firebaseAuth: FirebaseAuth
 
 
@@ -24,7 +28,11 @@ class MainActivity : ComponentActivity() {
         firebaseAuth = Firebase.auth
         setContent {
             FeelingGoodTheme {
-                AppNavigation(startDestinationViewModel = startDestinationViewModel)
+                AppNavigation(
+                    startDestinationViewModel = startDestinationViewModel,
+                    registrationScreenViewModel = registrationScreenViewModel,
+                    loginScreenViewModel = loginScreenViewModel
+                )
             }
         }
     }

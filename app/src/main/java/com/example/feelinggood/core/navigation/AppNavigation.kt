@@ -12,13 +12,17 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import com.example.feelinggood.auth.StartDestinationViewModel
 import com.example.feelinggood.auth.ui.login_screen.LoginScreen
+import com.example.feelinggood.auth.ui.login_screen.LoginScreenViewModel
 import com.example.feelinggood.auth.ui.registration_screen.RegistrationScreen
+import com.example.feelinggood.auth.ui.registration_screen.RegistrationScreenViewModel
 
 @Composable
 fun AppNavigation(
     modifier: Modifier = Modifier,
     startDestinationViewModel: StartDestinationViewModel,
-    navController: NavHostController = rememberNavController()
+    registrationScreenViewModel: RegistrationScreenViewModel,
+    loginScreenViewModel: LoginScreenViewModel,
+    navController: NavHostController = rememberNavController(),
 ) {
     val startDestination by startDestinationViewModel._startDestination.collectAsState()
 
@@ -39,7 +43,8 @@ fun AppNavigation(
                             popUpDestinationId = Destination.PreAuth.LoginScreen.route,
                             navController = navController
                         )
-                    }
+                    },
+                    loginScreenViewModel = loginScreenViewModel
                 )
             }
 
@@ -55,7 +60,8 @@ fun AppNavigation(
                             popUpDestinationId = Destination.PreAuth.RegistrationScreen.route,
                             navController = navController
                         )
-                    }
+                    },
+                    registrationScreenViewModel = registrationScreenViewModel
                 )
             }
         }
