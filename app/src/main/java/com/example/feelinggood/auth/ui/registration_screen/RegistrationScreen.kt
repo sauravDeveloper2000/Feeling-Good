@@ -1,5 +1,7 @@
 package com.example.feelinggood.auth.ui.registration_screen
 
+import android.util.Patterns
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,8 +19,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.feelinggood.R
@@ -31,6 +38,19 @@ fun RegistrationScreen(
     registrationScreenViewModel: RegistrationScreenViewModel,
     navigateToLoginScreen: () -> Unit
 ) {
+    val nameRegex = Regex("^[a-zA-Z][a-z\\sA-Z]{2,49}\$")
+    val context = LocalContext.current
+
+    var nameFieldError by remember { mutableStateOf(false) }
+    var nameFieldErrorCause by remember {
+        mutableStateOf<String?>(null)
+    }
+
+    var emailFieldError by remember { mutableStateOf(false) }
+    var emailFieldErrorCause by remember {
+        mutableStateOf<String?>(null)
+    }
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -39,7 +59,46 @@ fun RegistrationScreen(
             })
         },
         floatingActionButton = {
-            ExtendedFloatingActionButton(onClick = { /*TODO*/ }) {
+            ExtendedFloatingActionButton(
+                onClick = {
+                    /**
+                     *  Name Field Validation
+                     */
+                    if (registrationScreenViewModel.name.isNotEmpty()) {
+                        if (registrationScreenViewModel.name.matches(nameRegex)) {
+                            nameFieldError = false
+                            nameFieldErrorCause = null
+                            Toast.makeText(context, "Name is valid", Toast.LENGTH_SHORT).show()
+                        } else {
+                            nameFieldError = true
+                            nameFieldErrorCause =
+                                "Name must contain alphabets only and length should be in between 3 and 50."
+                        }
+                    } else {
+                        nameFieldError = true
+                        nameFieldErrorCause = "Name field is empty."
+                    }
+
+                    /**
+                     * Email-Id validation
+                     */
+                    if (registrationScreenViewModel.emailId.isNotEmpty()) {
+                        if (Patterns.EMAIL_ADDRESS.matcher(registrationScreenViewModel.emailId)
+                                .matches()
+                        ) {
+                            emailFieldError = false
+                            emailFieldErrorCause = null
+                        } else {
+                            emailFieldError = true
+                            emailFieldErrorCause =
+                                "Enter valid email-id without any spaces specifically in the end."
+                        }
+                    } else {
+                        emailFieldError = true
+                        emailFieldErrorCause = "Please enter your email-id"
+                    }
+                }
+            ) {
                 Icon(imageVector = Icons.Default.Create, contentDescription = "Create Account")
                 Text(text = "Create")
             }
@@ -73,6 +132,12 @@ fun RegistrationScreen(
                     },
                     label = {
                         Text(text = "Name")
+                    },
+                    isError = nameFieldError,
+                    supportingText = {
+                        nameFieldErrorCause?.let {
+                            Text(text = it)
+                        }
                     }
                 )
                 /**
@@ -90,6 +155,12 @@ fun RegistrationScreen(
                     },
                     label = {
                         Text(text = "Email-ID")
+                    },
+                    isError = emailFieldError,
+                    supportingText = {
+                        emailFieldErrorCause?.let {
+                            Text(text = it)
+                        }
                     }
                 )
                 /**
