@@ -1,12 +1,16 @@
 package com.example.feelinggood.auth.ui.login_screen
 
+import android.util.Patterns
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ElevatedCard
@@ -19,9 +23,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.feelinggood.R
 import com.example.feelinggood.auth.user_actions.EventsOnLoginScreen
@@ -42,6 +52,25 @@ fun LoginScreen(
             })
         }
     ) { innerPadding ->
+
+        var emailFieldError by remember {
+            mutableStateOf(false)
+        }
+        var emailFieldErrorCause by remember {
+            mutableStateOf<String?>(null)
+        }
+
+        var isPasswordVisible by remember {
+            mutableStateOf(false)
+        }
+        var passwordFieldError by remember {
+            mutableStateOf(false)
+        }
+        var passwordFieldErrorCause by remember {
+            mutableStateOf<String?>(null)
+        }
+
+        val context = LocalContext.current
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -68,6 +97,12 @@ fun LoginScreen(
                         value = loginScreenViewModel.emailId,
                         onValueChange = { emailId ->
                             loginScreenViewModel.onEvent(EventsOnLoginScreen.OnEmailIdClick(emailId = emailId))
+                        },
+                        isError = emailFieldError,
+                        supportingText = {
+                            emailFieldErrorCause?.let {
+                                Text(text = it)
+                            }
                         }
                     )
                     VerticalSpace(desiredSpace = 10)
@@ -87,16 +122,72 @@ fun LoginScreen(
                                 )
                             )
                         },
+                        isError = passwordFieldError,
+                        supportingText = {
+                            passwordFieldErrorCause?.let {
+                                Text(text = it)
+                            }
+                        },
                         trailingIcon = {
-                            IconButton(onClick = { /*TODO*/ }) {
+                            val image =
+                                if (isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
+                            IconButton(onClick = {
+                                isPasswordVisible = !isPasswordVisible
+                            }) {
                                 Icon(
-                                    imageVector = Icons.Default.VisibilityOff,
+                                    imageVector = image,
                                     contentDescription = "Password Visibility"
                                 )
                             }
-                        }
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Password
+                        )
                     )
-                    Button(onClick = { /*TODO*/ }) {
+                    Button(onClick = {
+                        /**
+                         *  Validation logic
+                         *  1st email-id
+                         */
+                        if (loginScreenViewModel.emailId.isNotEmpty()) {
+                            if (Patterns.EMAIL_ADDRESS.matcher(loginScreenViewModel.emailId)
+                                    .matches()
+                            ) {
+                                emailFieldError = false
+                                emailFieldErrorCause = null
+                            } else {
+                                emailFieldError = true
+                                emailFieldErrorCause =
+                                    "Enter valid email-id without any spaces specifically in the end."
+                            }
+                        } else {
+                            emailFieldError = true
+                            emailFieldErrorCause = "Please enter your email-id"
+                        }
+
+                        /**
+                         * Password Field Validation
+                         */
+                        if (loginScreenViewModel.password.isNotEmpty()) {
+                            if (loginScreenViewModel.password.length in 6..15) {
+                                passwordFieldError = false
+                                passwordFieldErrorCause = null
+                            } else {
+                                passwordFieldError = true
+                                passwordFieldErrorCause = "Length should in b/w 6..15"
+                            }
+                        } else {
+                            passwordFieldError = true
+                            passwordFieldErrorCause = "Please enter your password"
+                        }
+
+                        if (emailFieldError || passwordFieldError) {
+                            return@Button
+                        } else {
+                            Toast.makeText(context, "Validation Succeeded", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    }) {
                         Text(text = "Login")
                     }
                     /**

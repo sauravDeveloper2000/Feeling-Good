@@ -7,12 +7,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -27,6 +31,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.feelinggood.R
 import com.example.feelinggood.auth.user_actions.EventsOnRegistrationScreen
@@ -51,6 +58,23 @@ fun RegistrationScreen(
         mutableStateOf<String?>(null)
     }
 
+    var isPasswordVisible by remember {
+        mutableStateOf(false)
+    }
+    var newPasswordError by remember {
+        mutableStateOf(false)
+    }
+    var newPasswordErrorCause by remember {
+        mutableStateOf<String?>(null)
+    }
+
+    var confirmPasswordError by remember {
+        mutableStateOf(false)
+    }
+    var confirmPasswordErrorCause by remember {
+        mutableStateOf<String?>(null)
+    }
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -68,7 +92,6 @@ fun RegistrationScreen(
                         if (registrationScreenViewModel.name.matches(nameRegex)) {
                             nameFieldError = false
                             nameFieldErrorCause = null
-                            Toast.makeText(context, "Name is valid", Toast.LENGTH_SHORT).show()
                         } else {
                             nameFieldError = true
                             nameFieldErrorCause =
@@ -96,6 +119,52 @@ fun RegistrationScreen(
                     } else {
                         emailFieldError = true
                         emailFieldErrorCause = "Please enter your email-id"
+                    }
+
+                    /**
+                     *  New Password and Confirm Password Validation.
+                     */
+                    if (registrationScreenViewModel.newPassword.isNotEmpty() && registrationScreenViewModel.confirmNewPassword.isNotEmpty()) {
+                        if (registrationScreenViewModel.newPassword.length in 6..15 && registrationScreenViewModel.confirmNewPassword.length in 6..15) {
+                            if (registrationScreenViewModel.newPassword == registrationScreenViewModel.confirmNewPassword) {
+                                newPasswordError = false
+                                newPasswordErrorCause = null
+
+                                confirmPasswordError = false
+                                confirmPasswordErrorCause = null
+                            } else {
+                                newPasswordError = true
+                                confirmPasswordError = true
+
+                                newPasswordErrorCause = "Password is not matching"
+                                confirmPasswordErrorCause = "Password is not matching"
+                            }
+                        } else {
+                            newPasswordError =
+                                registrationScreenViewModel.newPassword.length !in 6..15
+                            newPasswordErrorCause =
+                                if (registrationScreenViewModel.newPassword.length in 6..15) null else "Password length should in b/w 6 and 15"
+
+                            confirmPasswordError =
+                                registrationScreenViewModel.confirmNewPassword.length !in 6..15
+                            confirmPasswordErrorCause =
+                                if (registrationScreenViewModel.confirmNewPassword.length in 6..15) null else "Confirm Password length should in b/w 6..15"
+                        }
+                    } else {
+                        newPasswordError = registrationScreenViewModel.newPassword.isEmpty()
+                        newPasswordErrorCause =
+                            if (newPasswordError) "Please enter your new password!!" else null
+
+                        confirmPasswordError =
+                            registrationScreenViewModel.confirmNewPassword.isEmpty()
+                        confirmPasswordErrorCause =
+                            if (confirmPasswordError) "Please enter your new confirm password!!" else null
+                    }
+
+                    if (nameFieldError || confirmPasswordError || newPasswordError || emailFieldError) {
+                        return@ExtendedFloatingActionButton
+                    } else {
+                        Toast.makeText(context, "Validation Succeeded", Toast.LENGTH_SHORT).show()
                     }
                 }
             ) {
@@ -176,9 +245,26 @@ fun RegistrationScreen(
                             )
                         )
                     },
+                    isError = newPasswordError,
+                    supportingText = {
+                        newPasswordErrorCause?.let {
+                            Text(text = it)
+                        }
+                    },
                     label = {
                         Text(text = "New Password")
-                    }
+                    },
+                    visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    trailingIcon = {
+                        val image =
+                            if (isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
+                        IconButton(onClick = {
+                            isPasswordVisible = !isPasswordVisible
+                        }) {
+                            Icon(imageVector = image, contentDescription = "Password Visibility")
+                        }
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                 )
                 /**
                  * Confirm New Password Field
@@ -193,9 +279,26 @@ fun RegistrationScreen(
                             )
                         )
                     },
+                    isError = confirmPasswordError,
+                    supportingText = {
+                        confirmPasswordErrorCause?.let {
+                            Text(text = it)
+                        }
+                    },
                     label = {
                         Text(text = "Confirm New Password")
-                    }
+                    },
+                    visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    trailingIcon = {
+                        IconButton(onClick = {
+                            isPasswordVisible = !isPasswordVisible
+                        }) {
+                            var image =
+                                if (isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
+                            Icon(imageVector = image, contentDescription = "Password Visibility")
+                        }
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
