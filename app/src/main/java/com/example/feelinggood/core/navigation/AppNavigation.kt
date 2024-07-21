@@ -15,6 +15,7 @@ import com.example.feelinggood.auth.ui.login_screen.LoginScreen
 import com.example.feelinggood.auth.ui.login_screen.LoginScreenViewModel
 import com.example.feelinggood.auth.ui.registration_screen.RegistrationScreen
 import com.example.feelinggood.auth.ui.registration_screen.RegistrationScreenViewModel
+import com.example.feelinggood.home.ui.HomeScreen
 
 @Composable
 fun AppNavigation(
@@ -63,6 +64,15 @@ fun AppNavigation(
                     },
                     registrationScreenViewModel = registrationScreenViewModel
                 )
+            }
+        }
+
+        navigation(
+            startDestination = Destination.PostAuth.HomeScreen.route,
+            route = Destination.PostAuth.route
+        ) {
+            composable(route = Destination.PostAuth.HomeScreen.route) {
+                HomeScreen(modifier = Modifier.fillMaxSize())
             }
         }
     }

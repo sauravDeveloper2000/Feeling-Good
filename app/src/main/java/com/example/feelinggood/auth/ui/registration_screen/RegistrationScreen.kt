@@ -164,7 +164,22 @@ fun RegistrationScreen(
                     if (nameFieldError || confirmPasswordError || newPasswordError || emailFieldError) {
                         return@ExtendedFloatingActionButton
                     } else {
-                        Toast.makeText(context, "Validation Succeeded", Toast.LENGTH_SHORT).show()
+                        registrationScreenViewModel.createAccount(
+                            successCase = {
+                                Toast.makeText(
+                                    context,
+                                    "Account Created Successfully",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            },
+                            failureCase = {
+                                Toast.makeText(
+                                    context,
+                                    "Account Creation got failed",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        )
                     }
                 }
             ) {

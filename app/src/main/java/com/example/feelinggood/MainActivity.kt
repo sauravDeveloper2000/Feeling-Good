@@ -42,6 +42,7 @@ class MainActivity : ComponentActivity() {
         firebaseAuth.addAuthStateListener { auth ->
             val user = auth.currentUser
             if (user != null) {
+                startDestinationViewModel.definesStartDestination(destination = Destination.PostAuth)
             } else {
                 startDestinationViewModel.definesStartDestination(destination = Destination.PreAuth)
             }
