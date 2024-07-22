@@ -9,6 +9,7 @@ import com.example.feelinggood.auth.ui.login_screen.LoginScreenViewModel
 import com.example.feelinggood.auth.ui.registration_screen.RegistrationScreenViewModel
 import com.example.feelinggood.core.navigation.AppNavigation
 import com.example.feelinggood.core.navigation.Destination
+import com.example.feelinggood.home.ui.HomeScreenViewModel
 import com.example.feelinggood.ui.theme.FeelingGoodTheme
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -20,6 +21,7 @@ class MainActivity : ComponentActivity() {
     private val startDestinationViewModel: StartDestinationViewModel by viewModels()
     private val registrationScreenViewModel: RegistrationScreenViewModel by viewModels()
     private val loginScreenViewModel: LoginScreenViewModel by viewModels()
+    private val homeScreenViewModel: HomeScreenViewModel by viewModels()
     private lateinit var firebaseAuth: FirebaseAuth
 
 
@@ -31,7 +33,8 @@ class MainActivity : ComponentActivity() {
                 AppNavigation(
                     startDestinationViewModel = startDestinationViewModel,
                     registrationScreenViewModel = registrationScreenViewModel,
-                    loginScreenViewModel = loginScreenViewModel
+                    loginScreenViewModel = loginScreenViewModel,
+                    homeScreenViewModel = homeScreenViewModel
                 )
             }
         }

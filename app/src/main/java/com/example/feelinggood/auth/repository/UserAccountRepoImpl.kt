@@ -24,5 +24,27 @@ class UserAccountRepoImpl @Inject constructor(
                 }
             }
     }
+    override suspend fun signIn(
+        userEmail: String,
+        password: String,
+        onSuccess: (FirebaseUser?) -> Unit,
+        onFailure: () -> Unit
+    ) {
+        firebaseAuth.signInWithEmailAndPassword(userEmail, password)
+            .addOnCompleteListener { task ->
+                try {
+                    val firebaseUser = task.result.user
+                    onSuccess(firebaseUser)
+                } catch (e: Exception) {
+                    onFailure()
+                }
+            }.addOnCanceledListener {
+                onFailure()
+            }
+    }
+
+    override suspend fun signOut() {
+        firebaseAuth.signOut()
+    }
 
 }

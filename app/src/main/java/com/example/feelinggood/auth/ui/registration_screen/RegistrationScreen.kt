@@ -175,7 +175,7 @@ fun RegistrationScreen(
                             failureCase = {
                                 Toast.makeText(
                                     context,
-                                    "Account Creation got failed",
+                                    "$it",
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }

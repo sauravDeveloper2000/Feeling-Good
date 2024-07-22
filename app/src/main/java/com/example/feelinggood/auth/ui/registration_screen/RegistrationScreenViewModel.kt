@@ -43,7 +43,7 @@ class RegistrationScreenViewModel @Inject constructor(
      */
     fun createAccount(
         successCase: () -> Unit,
-        failureCase: () -> Unit
+        failureCase: (String) -> Unit
     ) {
         viewModelScope.launch {
             userAccountRepo.createAccountWithEmailAndPassword(
@@ -52,12 +52,20 @@ class RegistrationScreenViewModel @Inject constructor(
                 onSuccess = {
                     it?.let { Log.d("Firebase Auth", "User Account Details: $it") }
                     successCase()
+                    resetStates()
                 },
                 onFailure = {
                     Log.d("Firebase Auth", "Failure Cause: $it")
-                    failureCase()
+                    failureCase(it)
                 }
             )
         }
+    }
+
+    private fun resetStates() {
+        emailId = ""
+        name = ""
+        newPassword = ""
+        confirmNewPassword = ""
     }
 }

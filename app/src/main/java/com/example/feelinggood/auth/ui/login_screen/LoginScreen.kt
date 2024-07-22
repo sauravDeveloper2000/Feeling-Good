@@ -32,6 +32,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.feelinggood.R
 import com.example.feelinggood.auth.user_actions.EventsOnLoginScreen
@@ -122,6 +124,7 @@ fun LoginScreen(
                                 )
                             )
                         },
+                        visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         isError = passwordFieldError,
                         supportingText = {
                             passwordFieldErrorCause?.let {
@@ -184,10 +187,30 @@ fun LoginScreen(
                         if (emailFieldError || passwordFieldError) {
                             return@Button
                         } else {
-                            Toast.makeText(context, "Validation Succeeded", Toast.LENGTH_SHORT)
-                                .show()
+                            loginScreenViewModel.logIn(
+                                onSuccess = {
+                                    emailFieldError = false
+                                    emailFieldErrorCause = null
+                                    passwordFieldError = false
+                                    passwordFieldErrorCause = null
+                                    Toast.makeText(
+                                        context,
+                                        "Successfully login",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                },
+                                onFailure = {
+                                    emailFieldError = true
+                                    emailFieldErrorCause = "Check Email ID"
+                                    passwordFieldError = true
+                                    passwordFieldErrorCause = "Check your Password"
+                                    Toast.makeText(context, "Login failed", Toast.LENGTH_SHORT)
+                                        .show()
+                                }
+                            )
                         }
-                    }) {
+                    })
+                    {
                         Text(text = "Login")
                     }
                     /**

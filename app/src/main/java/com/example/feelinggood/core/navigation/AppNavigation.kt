@@ -16,6 +16,7 @@ import com.example.feelinggood.auth.ui.login_screen.LoginScreenViewModel
 import com.example.feelinggood.auth.ui.registration_screen.RegistrationScreen
 import com.example.feelinggood.auth.ui.registration_screen.RegistrationScreenViewModel
 import com.example.feelinggood.home.ui.HomeScreen
+import com.example.feelinggood.home.ui.HomeScreenViewModel
 
 @Composable
 fun AppNavigation(
@@ -23,6 +24,7 @@ fun AppNavigation(
     startDestinationViewModel: StartDestinationViewModel,
     registrationScreenViewModel: RegistrationScreenViewModel,
     loginScreenViewModel: LoginScreenViewModel,
+    homeScreenViewModel: HomeScreenViewModel,
     navController: NavHostController = rememberNavController(),
 ) {
     val startDestination by startDestinationViewModel._startDestination.collectAsState()
@@ -72,7 +74,10 @@ fun AppNavigation(
             route = Destination.PostAuth.route
         ) {
             composable(route = Destination.PostAuth.HomeScreen.route) {
-                HomeScreen(modifier = Modifier.fillMaxSize())
+                HomeScreen(
+                    modifier = Modifier.fillMaxSize(),
+                    homeScreenViewModel = homeScreenViewModel
+                )
             }
         }
     }

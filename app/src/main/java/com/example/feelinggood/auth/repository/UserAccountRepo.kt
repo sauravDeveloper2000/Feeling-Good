@@ -9,4 +9,13 @@ interface UserAccountRepo {
         onSuccess: (FirebaseUser?) -> Unit,
         onFailure: (String) -> Unit
     )
+
+    suspend fun signIn(
+        userEmail: String,
+        password: String,
+        onSuccess: (FirebaseUser?) -> Unit,
+        onFailure: () -> Unit
+    )
+
+    suspend fun signOut()
 }
